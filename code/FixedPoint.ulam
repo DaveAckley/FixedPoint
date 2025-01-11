@@ -1,6 +1,6 @@
 quark FixedPoint(Unary cINT_BITS, Unary cFRAC_BITS) { //< Signed? fixed point hack?
   constant Int cMULTIPLIER = (Int) (1u<<cFRAC_BITS);
-  constant Unary cTOTAL_BITS = cINT_BITS + cFRAC_BITS;
+  constant Unsigned cTOTAL_BITS = cINT_BITS + cFRAC_BITS;
   constant Unsigned cDECIMAL_FRAC =
     ((cFRAC_BITS <= 3u)  ? 10u :
     ((cFRAC_BITS <= 6u)  ? 100u :
@@ -8,18 +8,34 @@ quark FixedPoint(Unary cINT_BITS, Unary cFRAC_BITS) { //< Signed? fixed point ha
     ((cFRAC_BITS <= 13u) ? 10000u :
     ((cFRAC_BITS <= 16u) ? 100000u :
     ((cFRAC_BITS <= 19u) ? 1000000u :
-     10000000u                  // nahgahhanlit
+     1000000u                   // nahgahhanlit
      ))))));
 
   typedef Int(cTOTAL_BITS) FP;
   typedef Int(64) Int64;
   FP mFP;
+
+  Self(Int raw) {
+    self.setInt(raw);
+  }
+
+  Self(Int num, Int den) {
+    self.setFraction(num,den);
+  }
+
   Self & set(Self other) {
     mFP = other.mFP;
     return self;
   }
   Self & setInt(Int raw) {
     mFP = (FP) (raw * cMULTIPLIER);
+    return self;
+  }
+  Self & setFraction(Int numerator, Int denominator) {
+    Self den;
+    self = numerator;
+    den = denominator;
+    self /= den;
     return self;
   }
   Int getInt() {
@@ -63,6 +79,7 @@ quark FixedPoint(Unary cINT_BITS, Unary cFRAC_BITS) { //< Signed? fixed point ha
   }
 
   Self & operator=(Int val) { return self.setInt(val); }
+  Self & operator=(Unsigned val) { return self.setInt((Int) val); }
   Self & operator=(Self other) { return self.set(other); }
 
   Bool operator<(Self other) { return self.mFP < other.mFP; }

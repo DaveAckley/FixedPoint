@@ -30,6 +30,16 @@ element S {
     mD = mC * mD;                   //mD.mulBy(mC);
     print(log,"8 mD",mD);
 
+    typedef FixedPoint(16u,16u) FP32;
+    FP32 a(17,1), b(6,-2);
+    FP32 c = a/b;
+    log.printf("%d FP32 c = a/b -> ",FP32.sizeof);
+    c.printTo(log);
+    log.print("  ");
+    FP32 d = b*c;
+    d.printTo(log);
+    log.print(";\n");
+
     // DONE
     EventWindow ew;
     ew[0] = Empty.instanceof;
