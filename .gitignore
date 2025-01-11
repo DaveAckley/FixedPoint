@@ -1,0 +1,5 @@
+*~
+*.mfz
+*.tgz
+.gen
+ISH*txt
