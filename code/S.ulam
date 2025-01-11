@@ -1,0 +1,37 @@
+local typedef FixedPoint(8u,9u) MyFP;
+
+element S {
+  MyFP mA, mB, mC, mD;
+  Void print(ByteStreamWriter & bs, String name, MyFP v) {
+    bs.printf("-- %s gi %d rd %d fp %x gf %d gf %x %s=(",name,v.getInt(),v.round(),v.mFP,v.getFrac(),v.getFrac(),name);
+    v.printTo(bs);
+    bs.printf(")\n");
+  }
+  Void behave() {
+    ByteStreamLogger log;
+    DebugUtils du;
+    log.printf("0 intbits %d fracbits %d totbits %d mul %d dec %d\n",
+               (Int) MyFP.cINT_BITS, (Int) MyFP.cFRAC_BITS, (Int) MyFP.cTOTAL_BITS,
+               (Int) MyFP.cMULTIPLIER, (Int) MyFP.cDECIMAL_FRAC);
+    mA = 18;                    //mA.setInt(18);
+    mB = -19;                   //mB.setInt(-19);
+    mC = mB;                    //mC.set(mB); 
+    print(log,"1 mA",mA);
+    print(log,"2 mB",mB);
+    print(log,"3 mC",mC);
+    mC *= mA;                   //mC.mulBy(mA);
+    print(log,"4 mC",mC);
+    mD = mA;                    //mD.set(mA);
+    mC = -12;                    //mC.setInt(12);
+    print(log,"5 mC",mC);
+    print(log,"6 mD",mD);
+    mD = mD / mC;                   //mD.divBy(mC);
+    print(log,"7 mD",mD);
+    mD = mC * mD;                   //mD.mulBy(mC);
+    print(log,"8 mD",mD);
+
+    // DONE
+    EventWindow ew;
+    ew[0] = Empty.instanceof;
+  }
+}
